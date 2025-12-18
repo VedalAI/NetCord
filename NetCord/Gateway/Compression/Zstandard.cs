@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿/*
+using System.Runtime.InteropServices;
 
 namespace NetCord.Gateway.Compression;
 
@@ -53,3 +54,4 @@ internal static partial class Zstandard
         public nuint Pos;
     }
 }
+*/
