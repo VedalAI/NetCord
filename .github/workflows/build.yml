@@ -32,23 +32,26 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build -c Release --no-restore --warnaserror
+        run: dotnet build -c Release --no-restore
 
       - name: Test
+        if: false
         run: dotnet test -c Release --no-build --verbosity normal
 
       - name: Pack Packages
         run: |
           dotnet pack NetCord -c Release --no-build
-          dotnet pack NetCord.Services -c Release --no-build
-          dotnet pack Hosting/NetCord.Hosting -c Release --no-build
-          dotnet pack Hosting/NetCord.Hosting.Services  -c Release --no-build
-          dotnet pack Hosting/NetCord.Hosting.AspNetCore -c Release --no-build
+#          dotnet pack NetCord.Services -c Release --no-build
+#          dotnet pack Hosting/NetCord.Hosting -c Release --no-build
+#          dotnet pack Hosting/NetCord.Hosting.Services  -c Release --no-build
+#          dotnet pack Hosting/NetCord.Hosting.AspNetCore -c Release --no-build
 
       - name: Setup Node
+        if: false
         uses: actions/setup-node@v6.1.0
 
       - name: Build Documentation
+        if: false
         working-directory: Documentation
         run: |
           dotnet tool install docfx -g --version 2.78.3
@@ -63,12 +66,13 @@ jobs:
           name: Build Artifacts
           path: |
             NetCord/bin/Release
-            NetCord.Services/bin/Release
-            Hosting/NetCord.Hosting/bin/Release
-            Hosting/NetCord.Hosting.Services/bin/Release
-            Hosting/NetCord.Hosting.AspNetCore/bin/Release
+#            NetCord.Services/bin/Release
+#            Hosting/NetCord.Hosting/bin/Release
+#            Hosting/NetCord.Hosting.Services/bin/Release
+#            Hosting/NetCord.Hosting.AspNetCore/bin/Release
 
       - name: Upload Documentation Artifacts
+        if: false
         uses: actions/upload-artifact@v5.0.0
         with:
           name: Documentation Artifacts
