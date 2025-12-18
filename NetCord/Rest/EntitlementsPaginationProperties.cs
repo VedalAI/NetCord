@@ -1,4 +1,6 @@
-﻿namespace NetCord.Rest;
+﻿using System.Runtime.CompilerServices;
+
+namespace NetCord.Rest;
 
 [GenerateMethodsForProperties]
 public partial record EntitlementsPaginationProperties : PaginationProperties<ulong>, IPaginationProperties<ulong, EntitlementsPaginationProperties>
@@ -8,6 +10,15 @@ public partial record EntitlementsPaginationProperties : PaginationProperties<ul
     public ulong? GuildId { get; set; }
     public bool? ExcludeEnded { get; set; }
 
-    static EntitlementsPaginationProperties IPaginationProperties<ulong, EntitlementsPaginationProperties>.Create() => new();
-    static EntitlementsPaginationProperties IPaginationProperties<ulong, EntitlementsPaginationProperties>.Create(EntitlementsPaginationProperties properties) => new(properties);
+    public static EntitlementsPaginationProperties Create() => new();
+    public static EntitlementsPaginationProperties Create(EntitlementsPaginationProperties properties) => new(properties);
+}
+
+sealed file class Initializer
+{
+    [ModuleInitializer]
+    internal static void Initialize()
+    {
+        PaginationPropertiesStatic.Register(EntitlementsPaginationProperties.Create, EntitlementsPaginationProperties.Create);
+    }
 }

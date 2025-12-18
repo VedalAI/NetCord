@@ -1,4 +1,6 @@
-﻿namespace NetCord.Rest;
+﻿using System.Runtime.CompilerServices;
+
+namespace NetCord.Rest;
 
 [GenerateMethodsForProperties]
 public partial record PaginationProperties<T> : IPaginationProperties<T, PaginationProperties<T>> where T : struct
@@ -13,13 +15,13 @@ public partial record PaginationProperties<T> : IPaginationProperties<T, Paginat
     {
         if (paginationProperties is null)
         {
-            var properties = TProperties.Create();
+            var properties = PaginationPropertiesStatic.Create<TProperties>();
             properties.Direction = defaultDirection;
             properties.BatchSize = defaultLimit;
             return properties;
         }
 
-        var result = TProperties.Create(paginationProperties);
+        var result = PaginationPropertiesStatic.Create(paginationProperties);
 
         var direction = result.Direction;
         if (direction.HasValue)
@@ -49,13 +51,13 @@ public partial record PaginationProperties<T> : IPaginationProperties<T, Paginat
     {
         if (paginationProperties is null)
         {
-            var properties = TProperties.Create();
+            var properties = PaginationPropertiesStatic.Create<TProperties>();
             properties.Direction = defaultDirection;
             properties.BatchSize = defaultLimit;
             return properties;
         }
 
-        var result = TProperties.Create(paginationProperties);
+        var result = PaginationPropertiesStatic.Create(paginationProperties);
 
         if (!result.Direction.HasValue)
             result.Direction = defaultDirection;
@@ -73,13 +75,13 @@ public partial record PaginationProperties<T> : IPaginationProperties<T, Paginat
     {
         if (paginationProperties is null)
         {
-            var properties = TProperties.Create();
+            var properties = PaginationPropertiesStatic.Create<TProperties>();
             properties.Direction = requiredDirection;
             properties.BatchSize = defaultLimit;
             return properties;
         }
 
-        var result = TProperties.Create(paginationProperties);
+        var result = PaginationPropertiesStatic.Create(paginationProperties);
 
         var direction = result.Direction;
         if (direction.HasValue)
@@ -97,6 +99,15 @@ public partial record PaginationProperties<T> : IPaginationProperties<T, Paginat
         return result;
     }
 
-    static PaginationProperties<T> IPaginationProperties<T, PaginationProperties<T>>.Create() => new();
-    static PaginationProperties<T> IPaginationProperties<T, PaginationProperties<T>>.Create(PaginationProperties<T> properties) => new(properties);
+    public static PaginationProperties<T> Create() => new();
+    public static PaginationProperties<T> Create(PaginationProperties<T> properties) => new(properties);
+}
+
+sealed file class Initializer
+{
+    [ModuleInitializer]
+    internal static void Initialize()
+    {
+        PaginationPropertiesStatic.RegisterGeneric(typeof(PaginationProperties<>), nameof(PaginationProperties<>.Create), nameof(PaginationProperties<>.Create));
+    }
 }

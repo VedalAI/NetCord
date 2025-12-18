@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace NetCord.Rest;
@@ -11,8 +12,8 @@ public partial record GuildUsersSearchPaginationProperties : PaginationPropertie
 
     public IEnumerable<IGuildUsersSearchQuery>? AndQuery { get; set; }
 
-    static GuildUsersSearchPaginationProperties IPaginationProperties<GuildUsersSearchTimestamp, GuildUsersSearchPaginationProperties>.Create() => new();
-    static GuildUsersSearchPaginationProperties IPaginationProperties<GuildUsersSearchTimestamp, GuildUsersSearchPaginationProperties>.Create(GuildUsersSearchPaginationProperties properties) => new(properties);
+    public static GuildUsersSearchPaginationProperties Create() => new();
+    public static GuildUsersSearchPaginationProperties Create(GuildUsersSearchPaginationProperties properties) => new(properties);
 
     public class GuildUsersSearchPaginationPropertiesConverter : JsonConverter<GuildUsersSearchPaginationProperties>
     {
@@ -70,5 +71,14 @@ public partial record GuildUsersSearchPaginationProperties : PaginationPropertie
 
             writer.WriteEndObject();
         }
+    }
+}
+
+sealed file class Initializer
+{
+    [ModuleInitializer]
+    internal static void Initialize()
+    {
+        PaginationPropertiesStatic.Register(GuildUsersSearchPaginationProperties.Create, GuildUsersSearchPaginationProperties.Create);
     }
 }

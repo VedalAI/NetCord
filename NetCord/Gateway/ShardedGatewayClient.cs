@@ -408,7 +408,7 @@ public sealed partial class ShardedGatewayClient : IReadOnlyList<GatewayClient>,
         }
     }
 
-    private void AddHandler(Dictionary<Func<GatewayClient, ValueTask>, List<Func<ValueTask>[]>> @event, Lock eventLock, Func<GatewayClient, ValueTask>? handler, Action<GatewayClient, Func<ValueTask>> addHandler)
+    private void AddHandler(Dictionary<Func<GatewayClient, ValueTask>, List<Func<ValueTask>[]>> @event, object eventLock, Func<GatewayClient, ValueTask>? handler, Action<GatewayClient, Func<ValueTask>> addHandler)
     {
         if (handler is null)
             return;
@@ -441,7 +441,7 @@ public sealed partial class ShardedGatewayClient : IReadOnlyList<GatewayClient>,
         }
     }
 
-    private void AddHandler<T>(Dictionary<Func<GatewayClient, T, ValueTask>, List<Func<T, ValueTask>[]>> @event, Lock eventLock, Func<GatewayClient, T, ValueTask>? handler, Action<GatewayClient, Func<T, ValueTask>> addHandler)
+    private void AddHandler<T>(Dictionary<Func<GatewayClient, T, ValueTask>, List<Func<T, ValueTask>[]>> @event, object eventLock, Func<GatewayClient, T, ValueTask>? handler, Action<GatewayClient, Func<T, ValueTask>> addHandler)
     {
         if (handler is null)
             return;
@@ -502,7 +502,7 @@ public sealed partial class ShardedGatewayClient : IReadOnlyList<GatewayClient>,
         }
     }
 
-    private void RemoveHandler(Dictionary<Func<GatewayClient, ValueTask>, List<Func<ValueTask>[]>> @event, Lock eventLock, Func<GatewayClient, ValueTask>? handler, Action<GatewayClient, Func<ValueTask>> removeHandler)
+    private void RemoveHandler(Dictionary<Func<GatewayClient, ValueTask>, List<Func<ValueTask>[]>> @event, object eventLock, Func<GatewayClient, ValueTask>? handler, Action<GatewayClient, Func<ValueTask>> removeHandler)
     {
         if (handler is null)
             return;
@@ -543,7 +543,7 @@ public sealed partial class ShardedGatewayClient : IReadOnlyList<GatewayClient>,
         }
     }
 
-    private void RemoveHandler<T>(Dictionary<Func<GatewayClient, T, ValueTask>, List<Func<T, ValueTask>[]>> @event, Lock eventLock, Func<GatewayClient, T, ValueTask>? handler, Action<GatewayClient, Func<T, ValueTask>> removeHandler)
+    private void RemoveHandler<T>(Dictionary<Func<GatewayClient, T, ValueTask>, List<Func<T, ValueTask>[]>> @event, object eventLock, Func<GatewayClient, T, ValueTask>? handler, Action<GatewayClient, Func<T, ValueTask>> removeHandler)
     {
         if (handler is null)
             return;
