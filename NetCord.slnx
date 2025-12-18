@@ -101,6 +101,8 @@
     <Project Path="Tests/VoiceEncryptionTest/VoiceEncryptionTest.csproj" />
   </Folder>
   -->
+  <!--
   <Project Path="NetCord.Services/NetCord.Services.csproj" />
+  -->
   <Project Path="NetCord/NetCord.csproj" />
 </Solution>
