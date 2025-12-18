@@ -5,7 +5,9 @@ namespace NetCord;
 
 public class UserCommandInteraction(JsonModels.JsonInteraction jsonModel, Guild? guild, InteractionResponseDelegate sendResponseAsync, RestClient client) : ApplicationCommandInteraction(jsonModel, guild, sendResponseAsync, client)
 {
-    public override UserCommandInteractionData Data { get; } = new(jsonModel.Data!, jsonModel.GuildId, client);
+    public UserCommandInteractionData Data3 { get; } = new(jsonModel.Data!, jsonModel.GuildId, client);
+
+    public override ApplicationCommandInteractionData Data2 => Data3;
 }
 
 public class UserCommandInteractionData : ApplicationCommandInteractionData

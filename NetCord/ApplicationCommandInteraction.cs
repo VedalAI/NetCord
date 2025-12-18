@@ -15,7 +15,9 @@ public abstract class ApplicationCommandInteraction : Interaction
     /// <summary>
     /// Holds the containing application command's data.
     /// </summary>
-    public abstract override ApplicationCommandInteractionData Data { get; }
+    public abstract ApplicationCommandInteractionData Data2 { get; }
+
+    public sealed override InteractionData Data => Data2;
 }
 
 /// <summary>

@@ -10,7 +10,9 @@ public abstract class ComponentInteraction : Interaction
     {
     }
 
-    public abstract override ComponentInteractionData Data { get; }
+    public abstract ComponentInteractionData Data2 { get; }
+
+    public sealed override InteractionData Data => Data2;
 }
 
 public class ComponentInteractionData : InteractionData

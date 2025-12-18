@@ -5,7 +5,9 @@ namespace NetCord;
 
 public class RoleMenuInteraction(JsonModels.JsonInteraction jsonModel, Guild? guild, InteractionResponseDelegate sendResponseAsync, RestClient client) : EntityMenuInteraction(jsonModel, guild, sendResponseAsync, client)
 {
-    public override RoleMenuInteractionData Data { get; } = new(jsonModel.Data!, jsonModel.GuildId, client);
+    public RoleMenuInteractionData Data5 { get; } = new(jsonModel.Data!, jsonModel.GuildId, client);
+
+    public sealed override EntityMenuInteractionData Data4 => Data5;
 }
 
 public class RoleMenuInteractionData : EntityMenuInteractionData

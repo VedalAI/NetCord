@@ -15,7 +15,9 @@ public abstract class MessageComponentInteraction : ComponentInteraction
 
     public Message Message { get; }
 
-    public abstract override MessageComponentInteractionData Data { get; }
+    public abstract MessageComponentInteractionData Data3 { get; }
+
+    public sealed override ComponentInteractionData Data2 => Data3;
 }
 
 public abstract class MessageComponentInteractionData : ComponentInteractionData

@@ -14,7 +14,7 @@ public class ModalInteraction : ComponentInteraction
             Message = new(message, guild, Channel, client);
         }
 
-        Data = new(jsonModel.Data!, jsonModel.GuildId, client);
+        Data3 = new(jsonModel.Data!, jsonModel.GuildId, client);
     }
 
     /// <summary>
@@ -22,7 +22,9 @@ public class ModalInteraction : ComponentInteraction
     /// </summary>
     public Message? Message { get; }
 
-    public override ModalInteractionData Data { get; }
+    public ModalInteractionData Data3 { get; }
+
+    public sealed override ComponentInteractionData Data2 => Data3;
 }
 
 public class ModalInteractionData : ComponentInteractionData

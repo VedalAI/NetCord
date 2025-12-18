@@ -9,7 +9,9 @@ public abstract class EntityMenuInteraction : MessageComponentInteraction
     {
     }
 
-    public abstract override EntityMenuInteractionData Data { get; }
+    public abstract EntityMenuInteractionData Data4 { get; }
+
+    public sealed override MessageComponentInteractionData Data3 => Data4;
 }
 
 public abstract class EntityMenuInteractionData : MessageComponentInteractionData
