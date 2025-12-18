@@ -1010,7 +1010,6 @@ public abstract partial class WebSocketClient : IDisposable
         return HandleTasksAsync(tasks, handlersName, count);
     }
 
-    [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder))]
     private async ValueTask HandleTasksAsync(ValueTask[] tasks, string handlersName, int count)
     {
         for (int i = 0; i < count; i++)

@@ -1,4 +1,5 @@
-﻿using System.Buffers;
+﻿/*
+using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -146,3 +147,4 @@ public partial class HttpEventValidator
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int CryptoSignEd25519VerifyDetached(ref byte sig, ref byte m, ulong mlen, ref byte pk);
 }
+*/

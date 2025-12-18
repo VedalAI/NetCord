@@ -514,7 +514,6 @@ public sealed partial class VoiceClient : WebSocketClient
         }
     }
 
-    [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder))]
     private static async ValueTask HandleTasksThatDoNotThrowAsync(ValueTask[] tasks, ushort maxIndex)
     {
         for (ushort i = 0; i <= maxIndex; i++)
