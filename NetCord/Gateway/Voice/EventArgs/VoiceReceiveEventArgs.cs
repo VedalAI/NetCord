@@ -1,6 +1,6 @@
 ﻿namespace NetCord.Gateway.Voice;
 
-public readonly ref struct VoiceReceiveEventArgs(byte[]? buffer, int frameIndex, int frameLength, uint ssrc)
+public readonly struct VoiceReceiveEventArgs(byte[]? buffer, int frameIndex, int frameLength, uint ssrc)
 {
     internal readonly byte[]? _buffer = buffer;
 
