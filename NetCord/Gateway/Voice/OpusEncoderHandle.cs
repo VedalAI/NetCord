@@ -2,9 +2,9 @@
 
 namespace NetCord.Gateway.Voice;
 
-internal class OpusEncoderHandle() : SafeHandle(0, true)
+internal class OpusEncoderHandle() : SafeHandle(IntPtr.Zero, true)
 {
-    public override bool IsInvalid => handle is 0;
+    public override bool IsInvalid => handle == IntPtr.Zero;
 
     protected override bool ReleaseHandle()
     {

@@ -12,7 +12,7 @@ internal class RetryingLimitedOffsetQueryPaginationAsyncEnumerable<T, TFrom>(
     PaginationQueryBuilder<TFrom> queryBuilder,
     TopLevelResourceInfo? resourceInfo,
     RestRequestProperties? properties,
-    bool global = true) : IAsyncEnumerable<T> where TFrom : struct, IBinaryInteger<TFrom>
+    bool global = true) : IAsyncEnumerable<T> where TFrom : struct//, IBinaryInteger<TFrom>
 {
     public async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
@@ -20,11 +20,12 @@ internal class RetryingLimitedOffsetQueryPaginationAsyncEnumerable<T, TFrom>(
 
         var query = queryBuilder.ToString(from);
 
-        var offset = from.GetValueOrDefault();
+        var offset = (int) (object) from.GetValueOrDefault();
 
         var expectedCount = paginationProperties.BatchSize.GetValueOrDefault();
-
-        var increment = TFrom.CreateChecked(expectedCount);
+        
+        // var increment = TFrom.CreateChecked(expectedCount);
+        var increment = (int)expectedCount;
 
         while (true)
         {
@@ -44,10 +45,10 @@ internal class RetryingLimitedOffsetQueryPaginationAsyncEnumerable<T, TFrom>(
 
                 offset += increment;
 
-                if (offset > maxOffset)
+                if (offset > (int) (object) maxOffset)
                     yield break;
 
-                query = queryBuilder.ToString(offset);
+                query = queryBuilder.ToString((TFrom) (object) offset);
             }
         }
     }

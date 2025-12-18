@@ -420,11 +420,11 @@ public sealed partial class ShardedGatewayClient : IReadOnlyList<GatewayClient>,
         {
             lock (eventLock)
             {
-                ref var list = ref CollectionsMarshal.GetValueRefOrAddDefault(@event, handler, out var exists);
-
-                if (!exists)
-                    list = new(1);
-
+                if (!@event.TryGetValue(handler, out var list))
+                {
+                    list = @event[handler] = new(1);
+                }
+                
                 Func<ValueTask>[] handlers;
 
                 if (_state is { Clients: { } clients })
@@ -453,10 +453,10 @@ public sealed partial class ShardedGatewayClient : IReadOnlyList<GatewayClient>,
         {
             lock (eventLock)
             {
-                ref var list = ref CollectionsMarshal.GetValueRefOrAddDefault(@event, handler, out var exists);
-
-                if (!exists)
-                    list = new(1);
+                if (!@event.TryGetValue(handler, out var list))
+                {
+                    list = @event[handler] = new(1);
+                }
 
                 Func<T, ValueTask>[] handlers;
 

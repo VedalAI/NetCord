@@ -59,7 +59,7 @@ public sealed class Aes256GcmRtpSizeEncryption : IVoiceEncryption
 
     public void SetKey(byte[] key)
     {
-        _encryption = new(key, TagSize);
+        _encryption = new(key);
     }
 
     public void Dispose()

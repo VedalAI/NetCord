@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 namespace NetCord;
 
@@ -141,4 +142,17 @@ internal static class CollectionsUtils
     {
         public static ImmutableDictionary<TKey, TValue> Empty { get; } = ImmutableDictionary<TKey, TValue>.Empty.WithComparers(null, ReferenceEqualityComparer.Instance);
     }
+}
+
+sealed file class ReferenceEqualityComparer : IEqualityComparer<object>
+{
+    private ReferenceEqualityComparer()
+    {
+    }
+
+    public static ReferenceEqualityComparer Instance { get; } = new();
+
+    public bool Equals(object x, object y) => x == y;
+
+    public int GetHashCode(object obj) => RuntimeHelpers.GetHashCode(obj);
 }

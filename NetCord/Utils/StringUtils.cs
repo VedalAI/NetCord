@@ -6,5 +6,5 @@ namespace NetCord;
 internal static class StringUtils
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ReadOnlySpan<char> AsSpanFast(this string s) => MemoryMarshal.CreateReadOnlySpan(in s.GetPinnableReference(), s.Length);
+    public static ReadOnlySpan<char> AsSpanFast(this string s) => s.AsSpan();
 }
