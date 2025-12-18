@@ -60,7 +60,7 @@ public abstract partial class WebSocketClient : IDisposable
 
     private protected class State : IDisposable
     {
-        private readonly Lock _lock = new();
+        private readonly object _lock = new();
 
         private TaskCompletionSource<ConnectionStateResult> _readyCompletionSource = new();
 
