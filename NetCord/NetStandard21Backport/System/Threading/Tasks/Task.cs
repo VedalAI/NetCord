@@ -25,22 +25,20 @@ public static class TaskExtensions
             return Task.WhenAll(tasks.ToArray());
         }
     }
-
-    extension<T>(Task<T> self)
+    
+    // https://github.com/dotnet/roslyn/issues/78487
+    public static async Task<T> WaitAsync<T>(this Task<T> self, CancellationToken cancellationToken)
     {
-        public async Task<T> WaitAsync(CancellationToken cancellationToken)
+        var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        await using (cancellationToken.Register(s => ((TaskCompletionSource<bool>)s!).TrySetCanceled(cancellationToken), tcs, useSynchronizationContext: false))
         {
-            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            await using (cancellationToken.Register(s => ((TaskCompletionSource<bool>)s!).TrySetCanceled(cancellationToken), tcs, useSynchronizationContext: false))
+            if (await Task.WhenAny(self, tcs.Task).ConfigureAwait(false) == tcs.Task)
             {
-                if (await Task.WhenAny(self, tcs.Task).ConfigureAwait(false) == tcs.Task)
-                {
-                    throw new OperationCanceledException(cancellationToken);
-                }
-
-                return await self.ConfigureAwait(false);
+                throw new OperationCanceledException(cancellationToken);
             }
+
+            return await self.ConfigureAwait(false);
         }
     }
 }

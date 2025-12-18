@@ -1,5 +1,5 @@
-﻿using System.Text;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 
 // ReSharper disable once CheckNamespace
 namespace System;
@@ -13,52 +13,19 @@ public static class StringExtensions
             source.AsSpan().CopyTo(destination);
         }
 
-        public static string Create(IFormatProvider? provider, StringFormatHandler handler)
+        public bool TryCopyTo(Span<char> destination)
         {
-            return string.Format(provider, handler.String, handler.Parts);
-        }
-    }
-
-    [InterpolatedStringHandler]
-    public class StringFormatHandler
-    {
-        public string String => _builder.ToString();
-        public object[] Parts => _parts.Cast<object>().ToArray();
-        
-        private readonly StringBuilder _builder = new();
-        private readonly List<string> _parts = [];
-        
-        public StringFormatHandler(int literalLength, int formattedCount)
-        {
+            return source.AsSpan().TryCopyTo(destination);
         }
         
-        public void AppendLiteral(string s)
+        public static string Format(IFormatProvider? provider, CompositeFormat format, ReadOnlySpan<object?> args)
         {
-            _builder.Append(s);
-        }
-        
-        public void AppendFormatted<T>(T value)
-        {
-            _builder.Append($"{{{_parts.Count}}}");
-            _parts.Add(value?.ToString() ?? string.Empty);
+            return string.Format(provider, format.Format, args.ToArray());
         }
 
-        public void AppendFormatted<T>(T value, string? format)
+        public static string Create(IFormatProvider? provider, [InterpolatedStringHandlerArgument("provider")] DefaultInterpolatedStringHandler handler)
         {
-            _builder.Append($"{{{_parts.Count}:{format}}}");
-            _parts.Add(value?.ToString() ?? string.Empty);
-        }
-        
-        public void AppendFormatted<T>(T value, int alignment)
-        {
-            _builder.Append($"{{{_parts.Count},{alignment}}}");
-            _parts.Add(value?.ToString() ?? string.Empty);
-        }
-
-        public void AppendFormatted<T>(T value, int alignment, string? format)
-        {
-            _builder.Append($"{{{_parts.Count},{alignment}:{format}}}");
-            _parts.Add(value?.ToString() ?? string.Empty);
+            return handler.ToString();
         }
     }
 }
