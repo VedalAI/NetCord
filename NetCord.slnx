@@ -1,4 +1,5 @@
 <Solution>
+  <!--
   <Folder Name="/Documentation/">
     <File Path="Documentation/.editorconfig" />
     <File Path="Documentation/Directory.Build.props" />
@@ -55,11 +56,14 @@
     <Project Path="Documentation/guides/services/text-commands/IntroductionHosting/IntroductionHosting.csproj" />
     <Project Path="Documentation/guides/services/text-commands/Parameters/Parameters.csproj" />
   </Folder>
+  -->
+  <!--
   <Folder Name="/Hosting/">
     <Project Path="Hosting/NetCord.Hosting.AspNetCore/NetCord.Hosting.AspNetCore.csproj" />
     <Project Path="Hosting/NetCord.Hosting.Services/NetCord.Hosting.Services.csproj" />
     <Project Path="Hosting/NetCord.Hosting/NetCord.Hosting.csproj" />
   </Folder>
+  -->
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />
@@ -79,6 +83,7 @@
     <Project Path="SourceGenerators/UserAgentHeaderGenerator/UserAgentHeaderGenerator.csproj" />
     <Project Path="SourceGenerators/WebSocketClientEventsGenerator/WebSocketClientEventsGenerator.csproj" />
   </Folder>
+  <!--
   <Folder Name="/Tests/">
     <File Path="Tests/Directory.Build.props" />
     <File Path="Tests/Directory.Build.targets" />
@@ -95,6 +100,7 @@
     <Project Path="Tests/TokenTest/TokenTest.csproj" />
     <Project Path="Tests/VoiceEncryptionTest/VoiceEncryptionTest.csproj" />
   </Folder>
+  -->
   <Project Path="NetCord.Services/NetCord.Services.csproj" />
   <Project Path="NetCord/NetCord.csproj" />
 </Solution>
