@@ -10,7 +10,6 @@
   </ItemGroup>
     
   <ItemGroup>
-    <PackageReference Include="Joveler.Compression.ZLib" />
     <PackageReference Include="PolySharp" />
     <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="System.Text.Json" />

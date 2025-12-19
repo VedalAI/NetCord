@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿/*
+using System.IO.Compression;
 
 namespace NetCord.Gateway.Compression;
 
@@ -90,3 +91,4 @@ public sealed class ZLibGatewayCompression : IGatewayCompression
         public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
     }
 }
+*/
