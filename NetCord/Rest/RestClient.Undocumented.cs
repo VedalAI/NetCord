@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 using NetCord.Gateway;
 
@@ -75,9 +76,9 @@ public partial class RestClient
         [SkipLocalsInit]
         static string CreateBaseQuery(GuildMessagesSearchPaginationProperties paginationProperties)
         {
-            DefaultInterpolatedStringHandler handler = new(0, 0, null, stackalloc char[512]);
+            StringBuilder handler = new();
 
-            handler.AppendLiteral("?");
+            handler.Append("?");
 
             var direction = paginationProperties.Direction.GetValueOrDefault();
 
@@ -251,22 +252,22 @@ public partial class RestClient
                     AppendQueryParameterT(ref handler, "channel_id", channelId);
             }
 
-            return handler.ToStringAndClear();
+            return handler.ToString();
 
-            static void AppendQueryParameter(ref DefaultInterpolatedStringHandler handler, string name, string value)
+            static void AppendQueryParameter(ref StringBuilder handler, string name, string value)
             {
-                handler.AppendLiteral(name);
-                handler.AppendLiteral("=");
-                handler.AppendFormatted(value);
-                handler.AppendLiteral("&");
+                handler.Append(name);
+                handler.Append("=");
+                handler.Append(value);
+                handler.Append("&");
             }
 
-            static void AppendQueryParameterT<T>(ref DefaultInterpolatedStringHandler handler, string name, T value)
+            static void AppendQueryParameterT<T>(ref StringBuilder handler, string name, T value)
             {
-                handler.AppendLiteral(name);
-                handler.AppendLiteral("=");
-                handler.AppendFormatted(value);
-                handler.AppendLiteral("&");
+                handler.Append(name);
+                handler.Append("=");
+                handler.Append(value);
+                handler.Append("&");
             }
 
             [StackTraceHidden]
