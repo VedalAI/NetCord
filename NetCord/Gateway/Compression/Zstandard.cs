@@ -1,43 +1,53 @@
-﻿/*
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace NetCord.Gateway.Compression;
 
-internal static partial class Zstandard
+internal static class Zstandard
 {
     public static bool TryLoad()
     {
-        return NativeLibrary.TryLoad("libzstd", typeof(Zstandard).Assembly, null, out _);
+        try
+        {
+            // Try calling a simple function to see if the library loads
+            _ = CreateDStream();
+            return true;
+        }
+        catch (DllNotFoundException)
+        {
+            return false;
+        }
     }
 
-    [LibraryImport("libzstd", EntryPoint = "ZSTD_isError")]
-    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    [DllImport("libzstd", EntryPoint = "ZSTD_isError", CallingConvention = CallingConvention.Cdecl)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool IsError(nuint code);
+    public static extern bool IsError(nuint code);
 
-    [LibraryImport("libzstd", EntryPoint = "ZSTD_getErrorName", StringMarshalling = StringMarshalling.Utf8)]
-    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
-    public static partial string GetErrorName(nuint code);
+    [DllImport("libzstd", EntryPoint = "ZSTD_getErrorName", CallingConvention = CallingConvention.Cdecl)]
+    private static extern IntPtr GetErrorNamePtr(nuint code);
 
-    [LibraryImport("libzstd", EntryPoint = "ZSTD_createDStream")]
-    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
-    public static partial DStreamHandle CreateDStream();
-
-    [LibraryImport("libzstd", EntryPoint = "ZSTD_freeDStream")]
-    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
-    public static partial nuint FreeDStream(nint zds);
-
-    [LibraryImport("libzstd", EntryPoint = "ZSTD_initDStream")]
-    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
-    public static partial nuint InitDStream(DStreamHandle zds);
-
-    [LibraryImport("libzstd", EntryPoint = "ZSTD_decompressStream")]
-    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
-    public static partial nuint DecompressStream(DStreamHandle zds, ref Buffer output, ref Buffer input);
-
-    public class DStreamHandle() : SafeHandle(0, true)
+    public static string GetErrorName(nuint code)
     {
-        public override bool IsInvalid => handle is 0;
+        var ptr = GetErrorNamePtr(code);
+        return Marshal.PtrToStringAnsi(ptr) ?? string.Empty;
+    }
+
+    [DllImport("libzstd", EntryPoint = "ZSTD_createDStream", CallingConvention = CallingConvention.Cdecl)]
+    public static extern DStreamHandle CreateDStream();
+
+    [DllImport("libzstd", EntryPoint = "ZSTD_freeDStream", CallingConvention = CallingConvention.Cdecl)]
+    public static extern nuint FreeDStream(nint zds);
+
+    [DllImport("libzstd", EntryPoint = "ZSTD_initDStream", CallingConvention = CallingConvention.Cdecl)]
+    public static extern nuint InitDStream(DStreamHandle zds);
+
+    [DllImport("libzstd", EntryPoint = "ZSTD_decompressStream", CallingConvention = CallingConvention.Cdecl)]
+    public static extern nuint DecompressStream(DStreamHandle zds, ref Buffer output, ref Buffer input);
+
+    public class DStreamHandle : SafeHandle
+    {
+        public DStreamHandle() : base(IntPtr.Zero, true) { }
+
+        public override bool IsInvalid => handle == IntPtr.Zero;
 
         protected override bool ReleaseHandle()
         {
@@ -54,4 +64,3 @@ internal static partial class Zstandard
         public nuint Pos;
     }
 }
-*/

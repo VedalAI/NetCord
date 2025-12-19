@@ -1,5 +1,4 @@
-﻿/*
-using static NetCord.Gateway.Compression.Zstandard;
+﻿using static NetCord.Gateway.Compression.Zstandard;
 
 namespace NetCord.Gateway.Compression;
 
@@ -76,5 +75,3 @@ public sealed partial class ZstandardGatewayCompression : IGatewayCompression
         _zstdStream.Dispose();
     }
 }
-#1#
-*/
