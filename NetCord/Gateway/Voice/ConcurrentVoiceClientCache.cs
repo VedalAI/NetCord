@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+using System.Collections;
+using System.Collections.Concurrent;
 
 using NetCord.Gateway.Voice.JsonModels;
 
@@ -39,34 +40,39 @@ public sealed class ConcurrentVoiceClientCache : IVoiceClientCache
 {
     internal ConcurrentVoiceClientCache()
     {
-        _ssrcs = new();
-        _users = new();
+        _users = [];
+        _userSsrcs = [];
+        _ssrcUsers = [];
     }
 
     internal ConcurrentVoiceClientCache(JsonVoiceClientCache jsonModel)
     {
         _ssrc = jsonModel.Ssrc;
-        _ssrcs = new(jsonModel.Ssrcs);
         _users = new(jsonModel.Users);
+        _userSsrcs = new(jsonModel.UserSsrcs);
+        _ssrcUsers = new(jsonModel.SsrcUsers);
     }
 
     public uint Ssrc => _ssrc;
-    public IReadOnlyDictionary<ulong, uint> Ssrcs => _ssrcs;
-    public IReadOnlyDictionary<uint, ulong> Users => _users;
+    public IReadOnlyCollection<ulong> Users => _users;
+    public IReadOnlyDictionary<ulong, uint> UserSsrcs => _userSsrcs;
+    public IReadOnlyDictionary<uint, ulong> SsrcUsers => _ssrcUsers;
 
 #pragma warning disable IDE0032 // Use auto property
     private uint _ssrc;
 #pragma warning restore IDE0032 // Use auto property
-    private readonly ConcurrentDictionary<ulong, uint> _ssrcs;
-    private readonly ConcurrentDictionary<uint, ulong> _users;
+    private readonly ConcurrentHashSet<ulong> _users;
+    private readonly ConcurrentDictionary<ulong, uint> _userSsrcs;
+    private readonly ConcurrentDictionary<uint, ulong> _ssrcUsers;
 
     public JsonVoiceClientCache ToJsonModel()
     {
         return new()
         {
             Ssrc = _ssrc,
-            Ssrcs = _ssrcs.ToDictionary(),
-            Users = _users.ToDictionary(),
+            Users = _users.ToArray(),
+            UserSsrcs = _userSsrcs.ToDictionary(),
+            SsrcUsers = _ssrcUsers.ToDictionary(),
         };
     }
 
@@ -77,18 +83,28 @@ public sealed class ConcurrentVoiceClientCache : IVoiceClientCache
         return this;
     }
 
-    public IVoiceClientCache CacheUser(ulong userId, uint ssrc)
+    public IVoiceClientCache CacheUsers(IReadOnlyList<ulong> userIds)
     {
-        _ssrcs[userId] = ssrc;
-        _users[ssrc] = userId;
+        int count = userIds.Count;
+        for (int i = 0; i < count; i++)
+            _users.Add(userIds[i]);
+
+        return this;
+    }
+
+    public IVoiceClientCache CacheUserSsrc(ulong userId, uint ssrc)
+    {
+        _userSsrcs[userId] = ssrc;
+        _ssrcUsers[ssrc] = userId;
 
         return this;
     }
 
     public IVoiceClientCache RemoveUser(ulong userId)
     {
-        if (_ssrcs.TryRemove(userId, out var ssrc))
-            _users.TryRemove(ssrc, out _);
+        _users.Remove(userId);
+        if (_userSsrcs.TryRemove(userId, out var ssrc))
+            _ssrcUsers.TryRemove(ssrc, out _);
 
         return this;
     }
@@ -102,5 +118,46 @@ public sealed class ConcurrentVoiceClientCache : IVoiceClientCache
 
     public void Dispose()
     {
+    }
+
+    private sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T> where T : notnull
+    {
+        private readonly ConcurrentDictionary<T, byte> _storage;
+
+        public ConcurrentHashSet()
+        {
+            _storage = [];
+        }
+
+        public ConcurrentHashSet(IEnumerable<T> collection)
+        {
+            _storage = new(collection.Select(item => new KeyValuePair<T, byte>(item, 0)));
+        }
+
+        public T[] ToArray() => [.. _storage.Keys];
+
+        public int Count => _storage.Count;
+
+        public bool Add(T item)
+        {
+            return _storage.TryAdd(item, 0);
+        }
+
+        public bool Remove(T item)
+        {
+            return _storage.TryRemove(item, out _);
+        }
+
+        public bool Contains(T item)
+        {
+            return _storage.ContainsKey(item);
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _storage.Keys.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
